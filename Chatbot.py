@@ -77,7 +77,7 @@ if uploaded_image is not None:
             
             # 取得 gpt-4 生成的描述
             img_description = response.choices[0].message.content
-            img_description = img_description[:700]
+            img_description = img_description[:2000]
             print("Image description: " + img_description)
             
             st.write(img_description)
