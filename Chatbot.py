@@ -9,6 +9,14 @@ with st.sidebar:
 
 st.title("💬 Cartoon Memories")
 st.caption("🚀 AI-Powered Cartoon Video Maker for Memories")
+st.write("""
+    ### Transform Your Memories into Cartoon Stories
+    Imagine turning your travel snapshots, cherished personal moments, and significant life events into captivating cartoon versions, ready to weave into stories or feeds for social media sharing. Start creating your cartoon memories today and bring a new dimension to your stories!
+    """)
+st.markdown("""
+    <img src="https://i.ibb.co/zZ2w8CX/DALL-E-2024-02-27-23-17-53-Create-an-image-in-the-style-of-a-bright-and-colorful-anime-similar-to-th.webp" width="50%">
+""", unsafe_allow_html=True)
+
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
 
