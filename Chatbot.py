@@ -25,17 +25,8 @@ if "messages" not in st.session_state:
 for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
-# 检查是否已经设置了OpenAI API密钥
-if prompt := st.chat_input():
-    if not openai_api_key:
-        st.info("Please add your OpenAI API key to continue.")
-        st.stop()
-
 # 允许用户上传图片
 uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-
-# 建立 OpenAI 客户端
-client = OpenAI(api_key='')
 
 if uploaded_image is not None:
     # 显示上传的图片
@@ -48,6 +39,12 @@ if uploaded_image is not None:
 
     # 调用 gpt-4 & dall-e-3 模型生成卡通版本的图片
     if st.button('Generate Cartoon Version'):
+        # 建立 OpenAI 客户端
+        if not openai_api_key:
+            st.info("Please add your OpenAI API key to continue.")
+            st.stop()
+        client = OpenAI(api_key=openai_api_key)
+
         try:
             # 初始化OpenAI客户端
             OpenAI.api_key = openai_api_key
