@@ -33,6 +33,8 @@ if prompt := st.chat_input():
 # 允许用户上传图片
 uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
+client = OpenAI(api_key='')
+
 if uploaded_image is not None:
     # 显示上传的图片
     image = Image.open(uploaded_image)
@@ -49,9 +51,9 @@ if uploaded_image is not None:
 
             # 调用DALL·E生成卡通版本的图片
             # 这里需要替换为调用DALL·E的代码，以下为示意性的伪代码
-            response = OpenAI.Image.create(
+            response = client.images.generate(
                 # 这里添加调用DALL·E的参数，如图片转换的具体要求
-                prompt="a cartoon version of this photo",
+                prompt="a japanese cartoon version of this photo",
                 n=1,
                 size="1024x1024"
             )
@@ -59,7 +61,7 @@ if uploaded_image is not None:
             # 假设`response`中包含了生成的图片URL或直接是图片的二进制数据
             # 展示生成的卡通图片
             # 注意：根据你如何接收DALL·E的输出，这里的代码可能需要调整
-            generated_image_url = response['data'][0]['url']  # 假设URL
+            generated_image_url = response.data[0].url
             st.image(generated_image_url, caption='Cartoon Version.')
 
         except Exception as e:
