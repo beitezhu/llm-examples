@@ -57,7 +57,7 @@ if uploaded_image is not None:
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": "Describe the image briefly."},
+                            {"type": "text", "text": "Describe the image briefly, include gender information and number of people."},
                             {
                                 "type": "image_url",
                                 "image_url": {
@@ -81,7 +81,7 @@ if uploaded_image is not None:
             response = client.images.generate(
                 # 这里添加调用DALL·E的参数，如图片转换的具体要求
                 model="dall-e-3",
-                prompt="Japanese Ghibli style, " + img_description,
+                prompt="Japanese Ghibli cartoon style, " + img_description,
                 n=1,
                 size="1024x1024"
             )
