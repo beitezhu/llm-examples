@@ -7,7 +7,7 @@ with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
 
-st.title("Cartoon Memories132324")
+st.title("Cartoon Memories my commi ")
 st.caption("🚀 AI-Powered Cartoon Video Maker for Memories")
 st.write("""
     ### Transform Your Memories into Cartoon Stories
