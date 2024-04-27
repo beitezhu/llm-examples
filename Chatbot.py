@@ -2,13 +2,14 @@ from openai import OpenAI
 import streamlit as st
 from PIL import Image
 import base64
+from pathlib import Path
 
 with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
 
-st.title("Momentoons")
-st.caption("🚀 AI-Powered Memory Maker for Social Media Memories")
+st.title("Cartoon Memories my commi ")
+st.caption("🚀 AI-Powered Cartoon Video Maker for Memories")
 st.write("""
     ### Transform Your Memories into Cartoon Stories
     Imagine turning your travel snapshots, cherished personal moments, and significant life events into captivating cartoon versions, ready to weave into stories or feeds for social media sharing. Start creating your cartoon memories today and bring a new dimension to your stories!
@@ -84,7 +85,7 @@ if uploaded_image is not None:
             response = client.images.generate(
                 # 这里添加调用DALL·E的参数，如图片转换的具体要求
                 model="dall-e-3",
-                prompt="Create a cartoon inspired by" + moment_style + "style. Generate " + ", " + img_description,
+                prompt="Create a cartoon inspired by " + moment_style + " style: " + img_description,
                 n=1,
                 size="1024x1024"
             )
@@ -101,7 +102,7 @@ if uploaded_image is not None:
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": "Inspired by the style of " + moment_style + ". Be fun and cinematic and narrate the moment felt by the following description in 40 words for social media. Here is the description: " + img_description},
+                            {"type": "text", "text": "In the style of " + moment_style + ". Be fun and cinematic and narrate the moment felt by the following description in 40 words for social media. Here is the description: " + img_description},
                             {
                                 "type": "image_url",
                                 "image_url": {
