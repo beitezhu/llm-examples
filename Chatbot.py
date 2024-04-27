@@ -26,7 +26,7 @@ for msg in st.session_state.messages:
 
 # 允许用户上传图片
 uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-moment_style = st.text_input("What style do you want your moment to be inspired by eg: Japanese Ghibli, Simpsons, Doraemon, Pokemon, Marvel")
+moment_style = st.text_input("What style do you want your moment to be inspired by eg: Japanese Ghibli, Simpsons, Batman, Pokemon, Marvel")
 narration_voice = st.selectbox("What voice would you like to use", ("alloy", "echo", "fable", "onyx", "nova", "shimmer"))
 
 
