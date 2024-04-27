@@ -8,7 +8,7 @@ with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
     "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
 
-st.title("Cartoon Memories")
+st.title("Cartoon Memories my commi ")
 st.caption("🚀 AI-Powered Cartoon Video Maker for Memories")
 st.write("""
     ### Transform Your Memories into Cartoon Stories
@@ -85,7 +85,7 @@ if uploaded_image is not None:
             response = client.images.generate(
                 # 这里添加调用DALL·E的参数，如图片转换的具体要求
                 model="dall-e-3",
-                prompt="In style " + moment_style + ", " + img_description,
+                prompt=moment_style + "style " + ", " + img_description,
                 n=1,
                 size="1024x1024"
             )
@@ -106,7 +106,7 @@ if uploaded_image is not None:
                             {
                                 "type": "image_url",
                                 "image_url": {
-                                    "url": generated_image_url,
+                                    "url": "data:image/jpeg;base64," +  base64_image_data,
                                 }
                             },
                         ],
