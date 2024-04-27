@@ -2,7 +2,6 @@ from openai import OpenAI
 import streamlit as st
 from PIL import Image
 import base64
-from pathlib import Path
 
 with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
