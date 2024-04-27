@@ -2,6 +2,7 @@ from openai import OpenAI
 import streamlit as st
 from PIL import Image
 import base64
+from pathlib import Path
 
 with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
@@ -25,6 +26,9 @@ for msg in st.session_state.messages:
 
 # 允许用户上传图片
 uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+cartoon_style = st.text_input("What style do you want your cartoons to be inspired by eg: Japanese Ghibli, Simpsons, Doraemon, Pokemon, Marvel", key="cartoon_style")
+narration_style = st.selectbox("What voice would you like to use", ("alloy", "echo", "fable", "onyx", "nova", "shimmer"))
+
 
 if uploaded_image is not None:
     # 显示上传的图片
@@ -69,7 +73,7 @@ if uploaded_image is not None:
                 ],
                 max_tokens=300,                
             )
-            
+
             # 取得 gpt-4 生成的描述
             img_description = response.choices[0].message.content
             img_description = img_description[:2000]
@@ -89,6 +93,46 @@ if uploaded_image is not None:
             # 显示生成的卡通版本的图片
             generated_image_url = response.data[0].url
             st.image(generated_image_url, caption='Japanese anima version.')
+
+            # 调用 gpt-4 描述這張圖片
+            response = client.chat.completions.create(
+                #  model="gpt-4",
+                model="gpt-4-vision-preview",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": "Narrate the moment and emotion being felt in the photo in a positive and cinematic way, the image has been inspired by " + cartoon_style},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": generated_image_url,
+                                }
+                            },
+                        ],
+                    }
+                ],
+                max_tokens=300,                
+            )
+
+
+            speech_file_path = Path(__file__).parent / "speech.mp3"
+            response = client.audio.speech.create(
+              model="tts-1",
+              voice=narration_style,
+              input=response.choices[0].message.content
+            )
+            
+            response.stream_to_file(speech_file_path)
+
+            st.audio(speech_file_path, format="audio/mpeg", loop=True)
+
+        
+
+        
+
+
+        
 
         except Exception as e:
             st.error(f"Error generating cartoon version: {e}")
