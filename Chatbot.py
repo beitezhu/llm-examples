@@ -26,8 +26,8 @@ for msg in st.session_state.messages:
 
 # 允许用户上传图片
 uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
-cartoon_style = st.text_input("What style do you want your cartoons to be inspired by eg: Japanese Ghibli, Simpsons, Doraemon, Pokemon, Marvel", key="cartoon_style")
-narration_style = st.selectbox("What voice would you like to use", ("alloy", "echo", "fable", "onyx", "nova", "shimmer"))
+moment_style = st.text_input("What style do you want your moment to be inspired by eg: Japanese Ghibli, Simpsons, Doraemon, Pokemon, Marvel")
+narration_voice = st.selectbox("What voice would you like to use", ("alloy", "echo", "fable", "onyx", "nova", "shimmer"))
 
 
 if uploaded_image is not None:
@@ -61,7 +61,7 @@ if uploaded_image is not None:
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": "Describe the image detailed, include gender information and number of people."},
+                            {"type": "text", "text": "Describe the image detailed, include number of people."},
                             {
                                 "type": "image_url",
                                 "image_url": {
@@ -78,21 +78,21 @@ if uploaded_image is not None:
             img_description = response.choices[0].message.content
             img_description = img_description[:2000]
             print("Image description: " + img_description)
-            
+
             st.write(img_description)
-            
+
             # 调用 dall-e-3 生成卡通版本的图片
             response = client.images.generate(
                 # 这里添加调用DALL·E的参数，如图片转换的具体要求
                 model="dall-e-3",
-                prompt="Japanese Ghibli style comic strip, " + img_description,
+                prompt="In style " + moment_style + ", " + img_description,
                 n=1,
                 size="1024x1024"
             )
             
             # 显示生成的卡通版本的图片
             generated_image_url = response.data[0].url
-            st.image(generated_image_url, caption='Japanese anima version.')
+            st.image(generated_image_url, caption=moment_style + " version")
 
             # 调用 gpt-4 描述這張圖片
             response = client.chat.completions.create(
@@ -102,7 +102,7 @@ if uploaded_image is not None:
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": "Narrate the moment and emotion being felt in the photo in a positive and cinematic way, the image has been inspired by " + cartoon_style},
+                            {"type": "text", "text": "In the style of " + moment_style + ". Be fun and cinematic and narrate the moment felt by the following description in 40 words for social media. Here is the description: " + img_description},
                             {
                                 "type": "image_url",
                                 "image_url": {
@@ -115,24 +115,21 @@ if uploaded_image is not None:
                 max_tokens=300,                
             )
 
+            stylized_description = response.choices[0].message.content
 
-            speech_file_path = Path(__file__).parent / "speech.mp3"
-            response = client.audio.speech.create(
-              model="tts-1",
-              voice=narration_style,
-              input=response.choices[0].message.content
-            )
-            
-            response.stream_to_file(speech_file_path)
+            st.write(stylized_description)
 
-            st.audio(speech_file_path, format="audio/mpeg", loop=True)
+            speech_file_path = "speech.mp3"
+            audio_response = client.audio.speech.create(model="tts-1", voice="alloy", input=response.choices[0].message.content)
+            audio_response.stream_to_file(speech_file_path)
+            audio_file = open(speech_file_path, 'rb')
+            audio_bytes = audio_file.read()
+            st.audio(audio_bytes, format='audio/mp3')
+            st.download_button(label="Download Speech",
+                                data=audio_bytes,
+                                file_name="speech.mp3",
+                                mime="audio/mp3")
 
-        
-
-        
-
-
-        
 
         except Exception as e:
-            st.error(f"Error generating cartoon version: {e}")
+            st.error(f"Error generating stylized version: {e}")
